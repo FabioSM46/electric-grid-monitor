@@ -2,6 +2,12 @@
 
 Go application to monitor Sonoff S61s power consumption using Matter protocol (chip-tool).
 
+## 🆕 Quick Start - Direct Commissioning from Raspberry Pi
+
+**New:** You can now commission the Sonoff S61s **directly from your Raspberry Pi** without needing Google Home!
+
+See [COMMISSIONING.md](COMMISSIONING.md) for detailed commissioning instructions.
+
 ## Architecture
 
 ```
@@ -27,79 +33,66 @@ Go application to monitor Sonoff S61s power consumption using Matter protocol (c
 
 ## Prerequisites
 
-1. **chip-tool** installed on Raspberry Pi
-2. **Sonoff S61s** already commissioned to your network (Google Home + eWeLink)
-3. **Go 1.21+** installed
+1. **Raspberry Pi** (3B+ or 4 recommended)
+2. **Sonoff S61s** smart plug
+3. **chip-tool** installed on Raspberry Pi
+4. **Go 1.21+** (for building from source)
 
-## Installation
+## Installation Options
 
-### Step 1: Install chip-tool on Raspberry Pi
-
-```bash
-# Update system
-sudo apt update && sudo apt upgrade -y
-
-# Install dependencies
-sudo apt install -y git gcc g++ python3 python3-pip pkg-config libssl-dev libdbus-1-dev \
-    libglib2.0-dev libavahi-client-dev ninja-build python3-venv python3-dev \
-    python3-pip unzip libgirepository1.0-dev libcairo2-dev
-
-# Clone connectedhomeip repository
-git clone https://github.com/project-chip/connectedhomeip.git
-cd connectedhomeip
-
-# Setup build environment
-source scripts/bootstrap.sh
-
-# Build chip-tool
-./scripts/build/build_examples.py --target linux-arm64-chip-tool build
-
-# Copy chip-tool to PATH
-sudo cp out/linux-arm64-chip-tool/chip-tool /usr/local/bin/
-
-# Verify installation
-chip-tool --version
-```
-
-### Step 2: Commission Your Device (if not already done)
-
-If your device is already commissioned, skip to Step 3.
+### Option 1: Automated Setup (Recommended)
 
 ```bash
-# Commission using QR code
-chip-tool pairing qrcode 0x1234 MT:-24J0AFN00SIQ663000
-
-# OR commission using manual pairing code
-chip-tool pairing code 0x1234 35792000079
-
-# Test connection - read power
-chip-tool electricalmeasurement read active-power 0x1234 1 --ip YOUR_DEVICE_IP
-```
-
-### Step 3: Install Electric Grid Monitor
-
-```bash
-# Clone repository
+# On Raspberry Pi:
 git clone <repository-url>
 cd electric-grid-monitor
+./scripts/install-raspberry-pi.sh
+
+# Follow the prompts to configure
+```
+
+### Option 2: Docker Compose
+
+```bash
+# Copy and edit configuration
+cp .env.example .env
+nano .env
+
+# Run everything
+docker-compose up -d
+
+# Access Grafana at http://raspberry-pi-ip:3000
+```
+
+### Option 3: Manual Build
+
+```bash
+# Install dependencies
+go mod tidy
+
+# Build
+make build
 
 # Create directories
 mkdir -p data logs
 
-# Copy and configure environment
+# Configure
 cp .env.example .env
-nano .env  # Edit with your settings
+nano .env
+
+# Run
+./build/electric-grid-monitor
 ```
 
-### Step 4: Configure .env File
+## Configuration
 
-Edit `.env` with your specific values:
+Copy `.env.example` to `.env` and configure:
 
 ```bash
-# Matter Device Configuration
-MATTER_NODE_ID=0x1234          # Your commissioned node ID
+# Matter Device Configuration (see COMMISSIONING.md)
+MATTER_NODE_ID=0x1234          # Node ID from commissioning
 MATTER_ENDPOINT=1              # Usually 1 for Sonoff S61s
-MATTER_IP=192.168.1.100        # Your Sonoff S61s IP address
+MATTER_IP=192.168.1.100        # Sonoff S61s IP address
 
 # Collection Settings
 COLLECTION_INTERVAL=30s        # How often to collect data
@@ -114,60 +107,28 @@ API_HOST=0.0.0.0
 
 # chip-tool path
 CHIP_TOOL_PATH=/usr/local/bin/chip-tool
-
-# Logging
-LOG_LEVEL=info
-LOG_FILE=./logs/monitor.log
 ```
 
-### Step 5: Build and Run
+## Commissioning Your Device
 
-```bash
-# Build
-make build
+**New!** Commission directly from Raspberry Pi:
 
-# Run in development mode
-make dev
+1. **Install chip-tool** (see COMMISSIONING.md)
+2. **Reset Sonoff S61s** (hold button 10-15 seconds)
+3. **Commission:**
+   ```bash
+   # Using QR code from device sticker
+   chip-tool pairing qrcode 0x1234 MT:XXXXXXXXXXX
+   
+   # OR using manual pairing code
+   chip-tool pairing code 0x1234 35792000079
+   ```
+4. **Test:**
+   ```bash
+   chip-tool electricalmeasurement read active-power 0x1234 1
+   ```
 
-# OR run the binary
-./build/electric-grid-monitor
-```
-
-### Step 6: Install as System Service (Production)
-
-```bash
-# Install binary and service
-sudo make install
-
-# Copy configuration to system location
-sudo mkdir -p /etc/electric-grid-monitor
-sudo cp .env /etc/electric-grid-monitor/
-sudo nano /etc/electric-grid-monitor/.env  # Edit with correct paths
-
-# Update service file to use system config
-sudo sed -i 's|WorkingDirectory=.*|WorkingDirectory=/var/lib/electric-grid-monitor|' /etc/systemd/system/electric-grid-monitor.service
-
-# Enable and start service
-sudo systemctl daemon-reload
-sudo systemctl enable electric-grid-monitor
-sudo systemctl start electric-grid-monitor
-
-# Check status
-sudo systemctl status electric-grid-monitor
-sudo journalctl -u electric-grid-monitor -f
-```
-
-## Docker Deployment (Alternative)
-
-```bash
-# Build and run with docker-compose
-docker-compose up -d
-
-# View logs
-docker-compose logs -f grid-monitor
-
-# Access Grafana at http://localhost:3000 (admin/admin)
-```
+See [COMMISSIONING.md](COMMISSIONING.md) for complete guide.
 
 ## API Endpoints
 
@@ -207,6 +168,8 @@ Table: `power_readings`
 ### Option 1: Docker Compose (Recommended)
 Grafana is included in docker-compose.yml with pre-configured dashboard.
 
+Access at: `http://raspberry-pi-ip:3000` (admin/admin)
+
 ### Option 2: Manual Setup
 
 1. **Install SQLite Datasource Plugin:**
@@ -217,27 +180,40 @@ Grafana is included in docker-compose.yml with pre-configured dashboard.
 
 2. **Add Data Source:**
    - URL: `http://localhost:8080`
-   - Or use SQLite: Path to `/var/lib/electric-grid-monitor/data/grid_monitor.db`
+   - Or use SQLite: Path to database file
 
 3. **Import Dashboard:**
    - Copy JSON from `grafana/dashboards/grid-monitor.json`
    - Import in Grafana UI
+
+## Systemd Service Management
+
+```bash
+# Enable service to start on boot
+sudo systemctl enable electric-grid-monitor
+
+# Start service
+sudo systemctl start electric-grid-monitor
+
+# Stop service
+sudo systemctl stop electric-grid-monitor
+
+# Check status
+sudo systemctl status electric-grid-monitor
+
+# View logs
+sudo journalctl -u electric-grid-monitor -f
+
+# Restart after config changes
+sudo systemctl restart electric-grid-monitor
+```
 
 ## Troubleshooting
 
 ### chip-tool not found
 ```bash
 which chip-tool
-# If not found, add to PATH or set CHIP_TOOL_PATH in .env
-```
-
-### Permission denied
-```bash
-# Make sure chip-tool is executable
-sudo chmod +x /usr/local/bin/chip-tool
-
-# For systemd service, ensure correct permissions
-sudo chown -R root:root /var/lib/electric-grid-monitor
+# If not found, install it first (see COMMISSIONING.md)
 ```
 
 ### Device not responding
@@ -247,6 +223,9 @@ chip-tool electricalmeasurement read active-power 0x1234 1 --ip YOUR_DEVICE_IP
 
 # Check device is online
 ping YOUR_DEVICE_IP
+
+# Verify commissioning worked
+chip-tool discover commissionables
 ```
 
 ### Database locked
@@ -259,6 +238,13 @@ sqlite3 data/grid_monitor.db "PRAGMA integrity_check;"
 
 # Restart service
 sudo systemctl start electric-grid-monitor
+```
+
+### Permission denied
+```bash
+# Fix permissions
+sudo chown -R $USER:$USER /var/lib/electric-grid-monitor
+sudo chown -R $USER:$USER /var/log/electric-grid-monitor
 ```
 
 ## Development
@@ -275,6 +261,9 @@ make clean
 
 # Build for Raspberry Pi (ARM64)
 GOOS=linux GOARCH=arm64 make build
+
+# Run in development mode
+make dev
 ```
 
 ## Project Structure
@@ -287,15 +276,35 @@ GOOS=linux GOARCH=arm64 make build
 │   ├── collector/collector.go    # chip-tool wrapper
 │   ├── config/config.go          # Configuration management
 │   └── storage/storage.go        # SQLite database operations
+├── scripts/
+│   └── install-raspberry-pi.sh   # Automated setup script
 ├── grafana/
 │   ├── dashboards/               # Grafana dashboard JSON
 │   └── provisioning/             # Grafana datasource config
 ├── systemd/                      # Systemd service files
+├── COMMISSIONING.md              # Detailed commissioning guide
 ├── .env.example                  # Example configuration
 ├── docker-compose.yml            # Docker deployment
 ├── Dockerfile                    # Container build
 └── Makefile                      # Build automation
 ```
+
+## Documentation
+
+- [COMMISSIONING.md](COMMISSIONING.md) - Step-by-step device commissioning guide
+- This README - General setup and usage
+
+## Features
+
+- ✅ **Direct Matter protocol** via chip-tool CLI wrapper
+- ✅ **No cloud dependency** - fully local
+- ✅ **SQLite storage** with automatic cleanup
+- ✅ **HTTP API** for Grafana integration
+- ✅ **Configurable via .env file**
+- ✅ **Systemd service** for production deployment
+- ✅ **Docker support** with docker-compose
+- ✅ **Pre-configured Grafana dashboards**
+- ✅ **Commission directly from Raspberry Pi**
 
 ## License
 
