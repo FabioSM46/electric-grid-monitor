@@ -43,3 +43,6 @@ Thumbs.db
 
 # Docker volumes
 grafana-storage/
+
+# App
+electric-grid-monitor-pi2
