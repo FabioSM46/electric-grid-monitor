@@ -1,0 +1,19 @@
+[Unit]
+Description=Electric Grid Monitor
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/var/lib/electric-grid-monitor
+Environment="HOME=/root"
+ExecStart=/usr/local/bin/electric-grid-monitor
+Restart=always
+RestartSec=10
+
+# Logging
+StandardOutput=append:/var/log/electric-grid-monitor/output.log
+StandardError=append:/var/log/electric-grid-monitor/error.log
+
+[Install]
+WantedBy=multi-user.target
