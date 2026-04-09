@@ -1,0 +1,11 @@
+apiVersion: 1
+
+datasources:
+  - name: GridMonitor SQLite
+    type: frser-sqlite-datasource
+    access: proxy
+    url: /app/data/grid_monitor.db
+    isDefault: true
+    editable: true
+    jsonData:
+      path: /app/data/grid_monitor.db
