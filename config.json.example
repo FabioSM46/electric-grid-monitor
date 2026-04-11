@@ -1,0 +1,13 @@
+{
+  "matter_node_id": "0x1234",
+  "matter_endpoint": 1,
+  "matter_ip": "192.168.1.100",
+  "collection_interval": "30s",
+  "data_retention_days": 365,
+  "db_path": "./data/grid_monitor.db",
+  "api_port": "8080",
+  "api_host": "0.0.0.0",
+  "chip_tool_path": "chip-tool",
+  "kwh_cost": 0.25,
+  "log_level": "info"
+}

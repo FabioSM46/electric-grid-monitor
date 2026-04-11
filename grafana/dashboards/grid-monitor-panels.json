@@ -1,0 +1,608 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Electric Grid Monitor - Sonoff S61s Power Consumption",
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "datasource": {"type": "frser-sqlite-datasource", "uid": "bfipjmle8tukgf"},
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 14,
+      "panels": [],
+      "title": "Current Readings",
+      "type": "row"
+    },
+    {
+      "datasource": {"type": "frser-sqlite-datasource", "uid": "bfipjmle8tukgf"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 1000
+              },
+              {
+                "color": "red",
+                "value": 2000
+              }
+            ]
+          },
+          "unit": "watt"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 0,
+        "y": 1
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.0.0",
+      "targets": [
+        {
+          "rawQueryText": "SELECT power_w as value FROM power_readings ORDER BY timestamp DESC LIMIT 1",
+          "queryText": "SELECT power_w as value FROM power_readings ORDER BY timestamp DESC LIMIT 1",
+          "rawSql": "SELECT power_w as value FROM power_readings ORDER BY timestamp DESC LIMIT 1",
+          "queryType": "table",
+          "timeColumns": ["time", "ts"],
+          "refId": "A"
+        }
+      ],
+      "title": "Power",
+      "type": "stat"
+    },
+    {
+      "datasource": {"type": "frser-sqlite-datasource", "uid": "bfipjmle8tukgf"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 250,
+          "min": 200,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 210
+              },
+              {
+                "color": "green",
+                "value": 220
+              },
+              {
+                "color": "yellow",
+                "value": 240
+              },
+              {
+                "color": "red",
+                "value": 250
+              }
+            ]
+          },
+          "unit": "volt"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 8,
+        "y": 1
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.0.0",
+      "targets": [
+        {
+          "rawQueryText": "SELECT voltage_v as value FROM power_readings ORDER BY timestamp DESC LIMIT 1",
+          "queryText": "SELECT voltage_v as value FROM power_readings ORDER BY timestamp DESC LIMIT 1",
+          "rawSql": "SELECT voltage_v as value FROM power_readings ORDER BY timestamp DESC LIMIT 1",
+          "queryType": "table",
+          "timeColumns": ["time", "ts"],
+          "refId": "A"
+        }
+      ],
+      "title": "Voltage",
+      "type": "stat"
+    },
+    {
+      "datasource": {"type": "frser-sqlite-datasource", "uid": "bfipjmle8tukgf"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 10
+              },
+              {
+                "color": "red",
+                "value": 16
+              }
+            ]
+          },
+          "unit": "amp"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 16,
+        "y": 1
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.0.0",
+      "targets": [
+        {
+          "rawQueryText": "SELECT current_a as value FROM power_readings ORDER BY timestamp DESC LIMIT 1",
+          "queryText": "SELECT current_a as value FROM power_readings ORDER BY timestamp DESC LIMIT 1",
+          "rawSql": "SELECT current_a as value FROM power_readings ORDER BY timestamp DESC LIMIT 1",
+          "queryType": "table",
+          "timeColumns": ["time", "ts"],
+          "refId": "A"
+        }
+      ],
+      "title": "Current",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "datasource": {"type": "frser-sqlite-datasource", "uid": "bfipjmle8tukgf"},
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 5
+      },
+      "id": 15,
+      "panels": [],
+      "title": "Historical Data",
+      "type": "row"
+    },
+    {
+      "datasource": {"type": "frser-sqlite-datasource", "uid": "bfipjmle8tukgf"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "watt"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 6
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "8.0.0",
+      "targets": [
+        {
+          "rawQueryText": "SELECT timestamp as time, power_w as Power FROM power_readings WHERE timestamp >= strftime('%s', 'now', '-24 hours') ORDER BY timestamp ASC",
+          "queryText": "SELECT timestamp as time, power_w as Power FROM power_readings WHERE timestamp >= strftime('%s', 'now', '-24 hours') ORDER BY timestamp ASC",
+          "rawSql": "SELECT timestamp as time, power_w as Power FROM power_readings WHERE timestamp >= strftime('%s', 'now', '-24 hours') ORDER BY timestamp ASC",
+          "queryType": "table",
+          "timeColumns": ["time", "ts"],
+          "refId": "A"
+        }
+      ],
+      "title": "Power Consumption (24h)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "frser-sqlite-datasource", "uid": "bfipjmle8tukgf"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "max": 250,
+          "min": 200,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "volt"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 14
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "8.0.0",
+      "targets": [
+        {
+          "rawQueryText": "SELECT timestamp as time, voltage_v as Voltage FROM power_readings WHERE timestamp >= strftime('%s', 'now', '-24 hours') ORDER BY timestamp ASC",
+          "queryText": "SELECT timestamp as time, voltage_v as Voltage FROM power_readings WHERE timestamp >= strftime('%s', 'now', '-24 hours') ORDER BY timestamp ASC",
+          "rawSql": "SELECT timestamp as time, voltage_v as Voltage FROM power_readings WHERE timestamp >= strftime('%s', 'now', '-24 hours') ORDER BY timestamp ASC",
+          "queryType": "table",
+          "timeColumns": ["time", "ts"],
+          "refId": "A"
+        }
+      ],
+      "title": "Voltage (24h)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "frser-sqlite-datasource", "uid": "bfipjmle8tukgf"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "amp"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 14
+      },
+      "id": 7,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "8.0.0",
+      "targets": [
+        {
+          "rawQueryText": "SELECT timestamp as time, current_a as Current FROM power_readings WHERE timestamp >= strftime('%s', 'now', '-24 hours') ORDER BY timestamp ASC",
+          "queryText": "SELECT timestamp as time, current_a as Current FROM power_readings WHERE timestamp >= strftime('%s', 'now', '-24 hours') ORDER BY timestamp ASC",
+          "rawSql": "SELECT timestamp as time, current_a as Current FROM power_readings WHERE timestamp >= strftime('%s', 'now', '-24 hours') ORDER BY timestamp ASC",
+          "queryType": "table",
+          "timeColumns": ["time", "ts"],
+          "refId": "A"
+        }
+      ],
+      "title": "Current (24h)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "frser-sqlite-datasource", "uid": "bfipjmle8tukgf"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "scheme",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 4,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 1
+              },
+              {
+                "color": "red",
+                "value": 5
+              }
+            ]
+          },
+          "unit": "currencyEUR"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
+      "id": 16,
+      "options": {
+        "legend": {
+          "calcs": ["lastNotNull"],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "8.0.0",
+      "targets": [
+        {
+          "rawQueryText": "SELECT timestamp as time, SUM(power_w * 30 / 3600.0 / 1000.0 * (SELECT CAST(value AS REAL) FROM settings WHERE key = 'kwh_cost')) OVER (ORDER BY timestamp) as \"Cost\" FROM power_readings WHERE timestamp >= strftime('%s', 'now', '-24 hours') ORDER BY timestamp ASC",
+          "queryText": "SELECT timestamp as time, SUM(power_w * 30 / 3600.0 / 1000.0 * (SELECT CAST(value AS REAL) FROM settings WHERE key = 'kwh_cost')) OVER (ORDER BY timestamp) as \"Cost\" FROM power_readings WHERE timestamp >= strftime('%s', 'now', '-24 hours') ORDER BY timestamp ASC",
+          "rawSql": "SELECT timestamp as time, SUM(power_w * 30 / 3600.0 / 1000.0 * (SELECT CAST(value AS REAL) FROM settings WHERE key = 'kwh_cost')) OVER (ORDER BY timestamp) as \"Cost\" FROM power_readings WHERE timestamp >= strftime('%s', 'now', '-24 hours') ORDER BY timestamp ASC",
+          "queryType": "table",
+          "timeColumns": ["time", "ts"],
+          "refId": "A"
+        }
+      ],
+      "title": "Energy Cost (24h)",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 27,
+  "style": "dark",
+  "tags": ["power", "monitoring", "sonoff", "matter"],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Electric Grid Monitor",
+  "uid": "electric-grid-monitor-v3",
+  "version": 1
+}

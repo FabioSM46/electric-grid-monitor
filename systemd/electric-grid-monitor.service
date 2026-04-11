@@ -1,0 +1,23 @@
+[Unit]
+Description=Electric Grid Monitor - Sonoff S61s Power Consumption
+After=network.target
+
+[Service]
+Type=simple
+User=fopea
+Group=fopea
+WorkingDirectory=/home/fopea/electric-grid-monitor
+ExecStart=/home/fopea/electric-grid-monitor/electric-grid-monitor
+Restart=always
+RestartSec=10
+
+# Create files with 0666 permissions so Grafana (uid 472) can read WAL/SHM
+UMask=0000
+
+# Logging via journald (view with: journalctl -u electric-grid-monitor)
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=electric-grid-monitor
+
+[Install]
+WantedBy=multi-user.target
